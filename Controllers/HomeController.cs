@@ -4,14 +4,32 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using redis_sample.Models;
 
 namespace redis_sample.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private const string CacheKey = "ASP_APP1";
+        private readonly IDistributedCache _distributedCache;
+
+        public HomeController(IDistributedCache distributedCache)
         {
+            _distributedCache = distributedCache;
+        }
+        public async Task<IActionResult> IndexAsync(bool write = false)
+        {
+            if (write) {
+                await _distributedCache.SetStringAsync(CacheKey, DateTime.UtcNow.ToString());
+
+                ViewData["Message"] = "Write Cache";
+                return View();
+            }
+
+		    var value = _distributedCache.GetString(CacheKey);
+            ViewData["Message"] = "Value Read: " + value;
+
             return View();
         }
 
