@@ -18,7 +18,7 @@ namespace redis_sample.Controllers
         {
             _distributedCache = distributedCache;
         }
-        public async Task<IActionResult> IndexAsync(bool write = false)
+        public async Task<IActionResult> Index(bool write = false)
         {
             if (write) {
                 await _distributedCache.SetStringAsync(CacheKey, DateTime.UtcNow.ToString());
@@ -27,7 +27,7 @@ namespace redis_sample.Controllers
                 return View();
             }
 
-		    var value = _distributedCache.GetString(CacheKey);
+		    var value = await _distributedCache.GetStringAsync(CacheKey);
             ViewData["Message"] = "Value Read: " + value;
 
             return View();
