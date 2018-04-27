@@ -22,6 +22,12 @@ namespace redis_sample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddDistributedRedisCache(option =>
+            {
+                option.Configuration = GetEnvironmentValue("REDIS_NAME");
+                option.InstanceName = GetEnvironmentValue("REDIS_HOST");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +50,17 @@ namespace redis_sample
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private string GetEnvironmentValue(string key)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+
+            if (string.IsNullOrEmpty(value)) {
+                value = Configuration.GetValue<string>(key);
+            }
+
+            return value;
         }
     }
 }
