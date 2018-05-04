@@ -1,6 +1,6 @@
 FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
-ENV REDIS_CONNECTION=redis
+ENV REDIS__CONNECTION=redis
 EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build

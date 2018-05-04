@@ -25,7 +25,7 @@ namespace redis_sample
 
             services.AddDistributedRedisCache(option =>
             {
-                option.Configuration = GetEnvironmentValue("REDIS_CONNECTION");
+                option.Configuration = GetEnvironmentValue("redis:connection");
                 option.InstanceName = "master";
             });
         }

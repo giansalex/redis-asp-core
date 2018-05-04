@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+     - "5000:80"
+    environment:
+     - REDIS__CONNECTION=redis
+  redis:
+    image: "redis:alpine"
