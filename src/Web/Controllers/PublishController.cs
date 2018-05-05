@@ -28,7 +28,7 @@ namespace redis_sample.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index([FromBody] string message)
+        public async Task<IActionResult> Index([FromForm] string message)
         {
             _logger.LogInformation($"Message added: {message}");
             _redis.PublishMessage(ChannelName, message);

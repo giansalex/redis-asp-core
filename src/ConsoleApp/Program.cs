@@ -9,10 +9,9 @@ namespace ConsoleApp
         const int PublishMessageCount = 5;
         static void Main(string[] args)
         {
-            var host = "redis";
             var messagesReceived = 0;
 
-            using (var redisConsumer = new RedisClient(host))
+            using (var redisConsumer = new RedisClient("localhost:6379"))
             using (var subscription = redisConsumer.CreateSubscription())
             {
                 subscription.OnSubscribe = channel =>
