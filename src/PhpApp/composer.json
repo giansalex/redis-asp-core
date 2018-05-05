@@ -1,0 +1,5 @@
+{
+    "require": {
+        "superbalist/php-pubsub-redis": "^2.0"
+    }
+}
