@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ServiceStack.Redis;
 
 namespace redis_sample
 {
@@ -22,12 +23,13 @@ namespace redis_sample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
             services.AddDistributedRedisCache(option =>
             {
                 option.Configuration = GetEnvironmentValue("redis:connection");
                 option.InstanceName = "master";
             });
+            
+            services.AddScoped<IRedisClient>(s => new RedisClient(GetEnvironmentValue("redis:connection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
