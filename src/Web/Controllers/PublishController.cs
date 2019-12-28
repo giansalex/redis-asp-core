@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using redis_sample.Models;
 using ServiceStack.Redis;
 
 namespace redis_sample.Controllers
@@ -22,13 +16,13 @@ namespace redis_sample.Controllers
             _redis = redisClient;
             _logger = logger;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index([FromForm] string message)
+        public IActionResult Index([FromForm] string message)
         {
             _logger.LogInformation($"Message added: {message}");
             _redis.PublishMessage(ChannelName, message);

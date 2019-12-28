@@ -1,19 +1,16 @@
-FROM microsoft/aspnetcore:2.0 AS base
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build-env
 WORKDIR /app
-ENV REDIS__CONNECTION=redis
-EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.0 AS build
-WORKDIR /src
+# Copy csproj and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
-COPY . .
-RUN dotnet build -c Release -o /app
 
-FROM build AS publish
-RUN dotnet publish -c Release -o /app
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-FROM base AS final
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "redis-sample.dll"]
